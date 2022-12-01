@@ -1,6 +1,5 @@
-d = {5: [5,6,7], 6:[7,8,9,9], 10:[23]}
-for i in d:
-    print(i)
+import math
+print(float('2') * float(4.5))
 #speed up: using bitboards
 # for i in danger:
     #     if i in possibleSet:

@@ -1,6 +1,6 @@
 import sys;args = sys.argv[1:]
 # Tianhao Chen,pd.4
-LIMIT_AB = 14
+LIMIT_AB = 11
 import time, random
 board, play, op, move = '','','', []
 gHeight, gWidth = 8, 8

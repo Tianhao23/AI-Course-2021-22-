@@ -126,6 +126,30 @@ def limMob(pzl, toPlay, opposite, pos): #limit mobility, returns the move with t
                 minM = len(temp)
                 moveToPlay = mv
     return moveToPlay
+def alphabeta(board, toPlay, a, b):
+    opposite = 'O' if toPlay=='X' else 'X'
+    if board.count('.') == 0: return board.count(toPlay) - board.count(opposite), []
+    if not (pos:=possible(board, toPlay, opposite)):
+        if possible(board, opposite, toPlay):
+            val, seq = alphabeta(board, opposite, -b, -a)
+            seq = seq + [-1]
+            #returnVal = val*-1, seq
+            return val*-1, seq
+        else:return board.count(toPlay) - board.count(opposite), []
+    sequence = []
+    best = a-1
+    for mv in set(pos.keys()):
+        val, seq = alphabeta(makeMove(board,toPlay, pos[mv]), opposite, -b, -a)
+        val = val*-1
+        if val < a: continue
+        if val > b:
+            if mv not in seq: seq = seq+[mv]
+            return val, seq
+        best = max(best, val)
+        a = val+1
+        sequence = seq
+        if mv not in sequence: sequence = sequence + [mv] 
+    return best, sequence
 def bestMove(possible, toPlay, opposite, pzl): #finds the best moves
     worstM = set() #set of worst case scenario moves, should be considered last
     possibleSet = set(possible.keys())
@@ -179,7 +203,9 @@ def main():
     move = quickMove(board.upper(), play)
     snapShot(board.upper(), play, possible(board.upper(), play, 'XO'[play=='X']), '','XO'[play=='X'], move)
     if board.count('.') < N: 
-        val, seq = negamax(board.upper(), play)
+        #val, seq = negamax(board.upper(), play)
+        val, seq = alphabeta(board.upper(), play, -64, 64)
+
         print(f'Min score: {val}; move sequence: {seq}')
     print()
     b = time.process_time()-a
